@@ -182,11 +182,11 @@ const Index = () => {
                 <div className="flex items-center mb-4">
                   <img 
                     src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1287&auto=format&fit=crop" 
-                    alt="Sarah J." 
+                    alt="Shiny U" 
                     className="w-12 h-12 rounded-full object-cover mr-4"
                   />
                   <div>
-                    <h3 className="font-medium">Sarah J.</h3>
+                    <h3 className="font-medium">Shiny U</h3>
                     <p className="text-sm text-muted-foreground">Fashion Blogger</p>
                   </div>
                 </div>
@@ -207,11 +207,11 @@ const Index = () => {
                 <div className="flex items-center mb-4">
                   <img 
                     src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1287&auto=format&fit=crop" 
-                    alt="Michael T." 
+                    alt="Lohith E" 
                     className="w-12 h-12 rounded-full object-cover mr-4"
                   />
                   <div>
-                    <h3 className="font-medium">Michael T.</h3>
+                    <h3 className="font-medium">Lohith E</h3>
                     <p className="text-sm text-muted-foreground">Architect</p>
                   </div>
                 </div>
@@ -232,11 +232,11 @@ const Index = () => {
                 <div className="flex items-center mb-4">
                   <img 
                     src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=1470&auto=format&fit=crop" 
-                    alt="Emma R." 
+                    alt="Archana A" 
                     className="w-12 h-12 rounded-full object-cover mr-4"
                   />
                   <div>
-                    <h3 className="font-medium">Emma R.</h3>
+                    <h3 className="font-medium">Archana A</h3>
                     <p className="text-sm text-muted-foreground">Marketing Executive</p>
                   </div>
                 </div>

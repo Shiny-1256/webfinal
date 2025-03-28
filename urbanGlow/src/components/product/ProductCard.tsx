@@ -44,14 +44,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
     });
   };
   
-  const handleView360 = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    toast.info("360° View", {
-      description: "View the product from all angles!",
-      position: "bottom-right",
-    });
-  };
+ 
   
   return (
     <Link
@@ -138,15 +131,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           >
             <ShoppingBag size={18} />
           </button>
-          {product.view360Images && (
-            <button
-              className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-urban hover:bg-urban hover:text-white transition-all duration-300 shadow-md"
-              onClick={handleView360}
-              aria-label="View 360"
-            >
-              <RotateCw size={18} />
-            </button>
-          )}
+          
         </div>
       </div>
       

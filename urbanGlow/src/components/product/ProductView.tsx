@@ -18,8 +18,7 @@ import {
   getRelatedProducts, 
   getFrequentlyBoughtTogether, 
   Product 
-} from "@/lib/data";
-import View360 from "@/components/product/View360";
+} from "@/lib/data"
 import VirtualTryOn from "@/components/product/VirtualTryOn";
 import RelatedProducts from "@/components/product/RelatedProducts";
 import { cn } from "@/lib/utils";
@@ -33,7 +32,6 @@ const ProductView = () => {
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [activeImage, setActiveImage] = useState(0);
-  const [isView360Open, setIsView360Open] = useState(false);
   const [isVirtualTryOnOpen, setIsVirtualTryOnOpen] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   
@@ -113,12 +111,7 @@ const ProductView = () => {
           <div className="relative">
             {/* Main Image */}
             <div className="rounded-2xl overflow-hidden mb-4 aspect-square relative">
-              {isView360Open ? (
-                <View360 
-                  images={product.view360Images || []} 
-                  onClose={() => setIsView360Open(false)} 
-                />
-              ) : isVirtualTryOnOpen ? (
+              { isVirtualTryOnOpen ? (
                 <VirtualTryOn 
                   product={product} 
                   onClose={() => setIsVirtualTryOnOpen(false)} 
@@ -147,15 +140,7 @@ const ProductView = () => {
               
               {/* View Controls */}
               <div className="absolute bottom-4 right-4 flex gap-2">
-                {product.view360Images && (
-                  <button
-                    onClick={() => setIsView360Open(!isView360Open)}
-                    className="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center text-urban hover:bg-urban hover:text-white transition-all duration-300"
-                    aria-label="View 360"
-                  >
-                    <RotateCw size={18} />
-                  </button>
-                )}
+                
                 <button
                   onClick={() => setIsVirtualTryOnOpen(!isVirtualTryOnOpen)}
                   className="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center text-urban hover:bg-urban hover:text-white transition-all duration-300"
@@ -179,7 +164,6 @@ const ProductView = () => {
                   )}
                   onClick={() => {
                     setActiveImage(index);
-                    setIsView360Open(false);
                     setIsVirtualTryOnOpen(false);
                   }}
                 >

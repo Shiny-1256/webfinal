@@ -106,19 +106,19 @@ const Footer = () => {
                 <MapPin size={18} className="mt-1 mr-2 text-urban" />
                 <span className="text-muted-foreground">
                   123 Fashion Street<br />
-                  New York, NY 10001
+                  Chennai, TN 600063
                 </span>
               </li>
               <li className="flex items-center">
                 <Phone size={18} className="mr-2 text-urban" />
-                <a href="tel:+12125550123" className="text-muted-foreground hover:text-urban transition-colors">
-                  (212) 555-0123
+                <a href="tel:+91 1234567890" className="text-muted-foreground hover:text-urban transition-colors">
+                  (91) 1234567890
                 </a>
               </li>
               <li className="flex items-center">
                 <Mail size={18} className="mr-2 text-urban" />
-                <a href="mailto:info@urbanglow.com" className="text-muted-foreground hover:text-urban transition-colors">
-                  info@urbanglow.com
+                <a href="mailto:mail@urbanglow.com" className="text-muted-foreground hover:text-urban transition-colors">
+                  mail@urbanglow.com
                 </a>
               </li>
             </ul>

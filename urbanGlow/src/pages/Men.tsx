@@ -6,6 +6,7 @@ import ChatBot from "@/components/ai/ChatBot";
 import { Toaster } from "sonner";
 import { getProductsByCategory } from "@/lib/data";
 import ProductCard from "@/components/product/ProductCard";
+import ProductView from "@/components/product/ProductView";
 
 const Men = () => {
   const products = getProductsByCategory("men");
@@ -62,6 +63,7 @@ const Men = () => {
           </div>
         </div>
       </main>
+      <ProductView />
       <Footer />
       <ChatBot />
       <Toaster />
