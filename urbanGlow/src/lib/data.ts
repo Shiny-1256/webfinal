@@ -78,7 +78,7 @@ export const products: Product[] = [
     shortDescription: "Premium structured blazer with modern tailoring",
     features: ["Premium cotton blend", "All-season fabric", "Inside pocket", "Breathable lining"],
     images: [
-      "https://images.unsplash.com/photo-1598808503429-896531b62b41?q=80&w=1287&auto=format&fit=crop",
+      "/res/w4.jpeg",
       "https://images.unsplash.com/photo-1611312449408-fcece27cdbb7?q=80&w=969&auto=format&fit=crop",
       "https://images.unsplash.com/photo-1598808503429-896531b62b41?q=80&w=1287&auto=format&fit=crop",
     ],

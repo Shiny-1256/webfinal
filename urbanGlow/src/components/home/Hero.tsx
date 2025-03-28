@@ -46,7 +46,7 @@ const Hero = () => {
           {/* Hero Text */}
           <div className="md:w-1/2 space-y-6 mb-12 md:mb-0 fade-in-left">
             <div className="inline-block rounded-full bg-urban-ultralight px-4 py-1 text-sm font-medium text-urban-dark mb-4">
-              New Collection 2023
+              New Collection 2025
             </div>
             <h1 className="font-serif text-5xl md:text-7xl font-bold leading-tight">
               <span className="block">Elevate Your</span>
@@ -82,7 +82,7 @@ const Hero = () => {
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-br from-urban/20 to-urban-light/10 rounded-2xl transform -rotate-6 scale-[0.97] shadow-xl"></div>
               <img 
-                src="https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?q=80&w=1470&auto=format&fit=crop" 
+                src="/res/w1.png" 
                 alt="Fashion Model" 
                 className="rounded-2xl shadow-2xl object-cover w-full h-auto relative z-10 scale-in-center"
               />
