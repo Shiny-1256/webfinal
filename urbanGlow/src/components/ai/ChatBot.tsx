@@ -9,8 +9,10 @@ type Message = {
   timestamp: Date;
 };
 
-// Initialize Gemini with your API key
-const genAI = new GoogleGenerativeAI("AIzaSyB7xniuc0QOwY_Ef9Q0ylSuIcQG5RgyyTY"); // Replace with your actual key
+// Initialize Gemini with correct configuration
+const genAI = new GoogleGenerativeAI("AIzaSyB7xniuc0QOwY_Ef9Q0ylSuIcQG5RgyyTY", {
+  apiVersion: 'v1' // Updated API version
+});
 
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -44,14 +46,11 @@ const ChatBot = () => {
     
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
   
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
   
   const toggleChat = () => {
@@ -82,53 +81,51 @@ const ChatBot = () => {
       timestamp: new Date(),
     };
     
-    setMessages((prev) => [...prev, userMessage]);
+    setMessages(prev => [...prev, userMessage]);
     setInputValue('');
     setIsTyping(true);
     
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+      const model = genAI.getGenerativeModel({ 
+        model: "gemini-1.5-pro-latest", // Updated model name
+        safetySettings: [
+          { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
+          { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" }
+        ]
+      });
       
-      const prompt = `
-      You are a fashion assistant for an online clothing store. 
-      Respond to the user's question about fashion, styling, or products.
-      Keep your response concise (1-3 sentences) and friendly.
+      const prompt = `As a fashion expert for our online store, provide a helpful response to:
+      "${content}"
+      Keep it under 3 sentences, friendly and fashion-focused.`;
       
-      User's question: ${content}
-      `;
+      const result = await model.generateContent({
+        contents: [{ parts: [{ text: prompt }] }],
+      });
       
-      const result = await model.generateContent(prompt);
       const response = await result.response;
       const text = response.text();
       
-      const botMessage: Message = {
-        id: (Date.now() + 1).toString(),
+      setMessages(prev => [...prev, {
+        id: Date.now().toString(),
         content: text,
         sender: 'bot',
-        timestamp: new Date(),
-      };
-      
-      setMessages((prev) => [...prev, botMessage]);
+        timestamp: new Date()
+      }]);
     } catch (error) {
-      console.error("Error generating response:", error);
-      
-      const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        content: "Sorry, I'm having trouble responding right now. Please try again later!",
+      console.error("Chat error:", error);
+      setMessages(prev => [...prev, {
+        id: Date.now().toString(),
+        content: "I'm having trouble connecting. Try again in a moment!",
         sender: 'bot',
-        timestamp: new Date(),
-      };
-      
-      setMessages((prev) => [...prev, errorMessage]);
+        timestamp: new Date()
+      }]);
     } finally {
       setIsTyping(false);
     }
   };
   
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleSendMessage();
-    }
+    if (e.key === 'Enter') handleSendMessage();
   };
   
   const handleSuggestedQuestion = (question: string) => {
@@ -136,24 +133,13 @@ const ChatBot = () => {
   };
 
   return (
-    <div
-      className={`fixed ${isOpen ? 'bottom-6' : 'bottom-24'} right-6 z-50 transition-all duration-300 ${
-        isMinimized ? 'transform translate-y-[calc(100%-60px)]' : ''
-      }`}
-    >
+    <div className={`fixed ${isOpen ? 'bottom-6' : 'bottom-24'} right-6 z-50 transition-all duration-300 ${isMinimized ? 'transform translate-y-[calc(100%-60px)]' : ''}`}>
       {isOpen && (
-        <div
-          className={`bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 transform ${
-            isMobile ? 'w-[calc(100vw-48px)] h-[500px]' : 'w-[400px] h-[550px]'
-          }`}
-        >
-          {/* Chat Header */}
-          <div
-            className="bg-gradient-to-r from-urban-dark to-urban p-4 flex justify-between items-center cursor-pointer"
-            onClick={() => inputRef.current?.focus()}
-          >
+        <div className={`bg-white rounded-2xl shadow-lg overflow-hidden ${isMobile ? 'w-[calc(100vw-48px)] h-[500px]' : 'w-[400px] h-[550px]'}`}>
+          {/* Header - Original Urban Theme */}
+          <div className="bg-gradient-to-r from-urban-dark to-urban p-4 flex justify-between items-center">
             <div className="flex items-center">
-              <div className="w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center mr-3">
+              <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center mr-3">
                 <Sparkles size={20} className="text-white" />
               </div>
               <div>
@@ -162,45 +148,23 @@ const ChatBot = () => {
               </div>
             </div>
             <div className="flex items-center">
-              <button
-                className="text-white/80 hover:text-white transition-colors ml-2"
-                onClick={minimizeChat}
-              >
+              <button className="text-white/80 hover:text-white ml-2" onClick={minimizeChat}>
                 <MinusCircle size={20} />
               </button>
-              <button
-                className="text-white/80 hover:text-white transition-colors ml-2"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsOpen(false);
-                }}
-              >
+              <button className="text-white/80 hover:text-white ml-2" onClick={(e) => { e.stopPropagation(); setIsOpen(false); }}>
                 <X size={20} />
               </button>
             </div>
           </div>
           
-          {/* Chat Body */}
+          {/* Messages */}
           <div className="h-[calc(100%-130px)] overflow-y-auto p-4 bg-gray-50">
             <div className="space-y-4">
               {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-                >
-                  <div
-                    className={`max-w-[80%] p-3 rounded-lg ${
-                      message.sender === 'user'
-                        ? 'bg-urban text-white rounded-tr-none'
-                        : 'bg-white border border-gray-200 rounded-tl-none'
-                    }`}
-                  >
+                <div key={message.id} className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`max-w-[80%] p-3 rounded-lg ${message.sender === 'user' ? 'bg-urban text-white rounded-tr-none' : 'bg-white border border-gray-200 rounded-tl-none'}`}>
                     <p>{message.content}</p>
-                    <p
-                      className={`text-xs mt-1 text-right ${
-                        message.sender === 'user' ? 'text-white/70' : 'text-gray-400'
-                      }`}
-                    >
+                    <p className={`text-xs mt-1 text-right ${message.sender === 'user' ? 'text-white/70' : 'text-gray-400'}`}>
                       {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </p>
                   </div>
@@ -210,9 +174,9 @@ const ChatBot = () => {
                 <div className="flex justify-start">
                   <div className="bg-white border border-gray-200 p-3 rounded-lg rounded-tl-none max-w-[80%]">
                     <div className="flex space-x-1">
-                      <div className="w-2 h-2 bg-urban rounded-full animate-bounce delay-0"></div>
-                      <div className="w-2 h-2 bg-urban rounded-full animate-bounce delay-150"></div>
-                      <div className="w-2 h-2 bg-urban rounded-full animate-bounce delay-300"></div>
+                      <div className="w-2 h-2 bg-urban rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                      <div className="w-2 h-2 bg-urban rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                      <div className="w-2 h-2 bg-urban rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                     </div>
                   </div>
                 </div>
@@ -223,7 +187,7 @@ const ChatBot = () => {
           
           {/* Suggested Questions */}
           <div className="px-4 py-2 border-t border-gray-100 bg-white">
-            <div className="flex overflow-x-auto hide-scrollbar gap-2 pb-2">
+            <div className="flex overflow-x-auto gap-2 pb-2">
               {suggestedQuestions.map((question) => (
                 <button
                   key={question}
@@ -236,7 +200,7 @@ const ChatBot = () => {
             </div>
           </div>
           
-          {/* Chat Input */}
+          {/* Input */}
           <div className="p-3 border-t border-gray-100 bg-white">
             <div className="flex items-center">
               <input
@@ -260,14 +224,9 @@ const ChatBot = () => {
         </div>
       )}
       
+      {/* Toggle Button */}
       <button
-        className={`flex items-center justify-center rounded-full shadow-lg transition-all duration-300 ${
-          isOpen
-            ? 'hidden'
-            : isMinimized
-            ? 'w-full h-12 bg-white border-t border-gray-200'
-            : 'w-16 h-16 bg-urban hover:bg-urban-dark'
-        }`}
+        className={`flex items-center justify-center rounded-full shadow-lg transition-all ${isOpen ? 'hidden' : isMinimized ? 'w-full h-12 bg-white border-t border-gray-200' : 'w-16 h-16 bg-urban hover:bg-urban-dark'}`}
         onClick={toggleChat}
       >
         {isMinimized ? (
